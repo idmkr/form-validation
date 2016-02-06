@@ -1,0 +1,16 @@
+{
+  "name": "idmkr/form-validation",
+  "description": "PHP Form Validator using respect/validation",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gael DEBOST",
+      "email": "gael@idmkr.io"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "Idmkr\\FormValidation": "src"
+    }
+  }
+}
