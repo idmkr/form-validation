@@ -33,7 +33,7 @@ class ContactForm extends ValidatableForm
         return $this->text();
     }
 
-    public function validateName()
+    public function validateLastname()
     {
         return $this->text();
     }
@@ -67,9 +67,8 @@ $form = new ContactForm('fr_FR');
 
 $success = $form->validate($_POST)
             // Send email through PHPMailer
-            && $form->notify('team@idmkr.io',[
-                'subject' => '{idmkr.io} '.ucfirst($type).' '.
-                             $form->data("prenom").' '.$form->data("nom"),
+            && $form->notify('your@mail.com',[
+                'subject' => '{Contact Form} '.$form->data("firstname").' '.$form->data("lastname"),
                 'from' => $form->data("email")
             ])
             // Log to .json file
