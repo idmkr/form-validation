@@ -1,5 +1,5 @@
 #PHP Form validation and notifier, class based, intuitive.
-This package provide a simple wrapper around the awesome respect/validation package. It's basically just an abstract class that you can extend and it provides a dynamic method `validateInputName()` Define your form data and validate them at once
+This package provide a simple wrapper around the awesome respect/validation package. It's basically just an abstract class that you can extend, and it provides a dynamic method `validateInputName()`, along with a mailer and logger feature. 
 
 ##Features
 - Define your form data and validation with a simple class method
@@ -11,7 +11,8 @@ composer require idmkr/form-validation
 Extend this class and start using respect/validation validators as intuitive class methods.
 
 #Full example
-Handling a classic contact form is straightforward. Start by creating a new class and extends ValidatableForm. You can then invoke Validation ( v ) and start using it.
+Handling a classic contact form is straightforward. Start by creating a new class and extends ValidatableForm. You can then use  `Respect\Validation\Validator` ( v:: ) and define your form fields by transforming them into CamelCase. 
+Form data which have not been defined by this method will simply be not be processed.
 
 ```php
 use Respect\Validation\Validator as v;
@@ -51,10 +52,10 @@ class ContactForm extends ValidatableForm
 }
 ```
 
-In your route/controller :
+In your POST route/controller function :
 
 ```php
-$form = new $validatorClass('fr_FR');
+$form = new ContactForm('fr_FR');
 
 $success = $form->validate($_POST)
             && $form->notify('team@idmkr.io',[
