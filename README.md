@@ -16,16 +16,21 @@ Form data which have not been defined by this method will simply be not be proce
 
 ```php
 use Respect\Validation\Validator as v;
+
 use Idmkr\FormValidation\ValidatableForm;
+use Idmkr\FormValidation\Traits\Mailable;
+use Idmkr\FormValidation\Traits\Loggable;
 
 class ContactForm extends ValidatableForm
 {
-    public function validatePrenom()
+    use Mailable,Loggable;
+    
+    public function validateFirstname()
     {
         return $this->text();
     }
 
-    public function validateNom()
+    public function validateName()
     {
         return $this->text();
     }
@@ -58,11 +63,13 @@ In your POST route/controller function :
 $form = new ContactForm('fr_FR');
 
 $success = $form->validate($_POST)
+            // Send email through PHPMailer
             && $form->notify('team@idmkr.io',[
                 'subject' => '{idmkr.io} '.ucfirst($type).' '.
                              $form->data("prenom").' '.$form->data("nom"),
                 'from' => $form->data("email")
             ])
+            // Log to .json file
             && $form->writeTo(APP_DIR."/content/form/$type");
 
 if(!$success)
