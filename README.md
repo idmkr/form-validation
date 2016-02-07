@@ -7,8 +7,11 @@ This package provide a simple wrapper around the awesome respect/validation pack
 - Mail notifier
 
 #Installation
+```
 composer require idmkr/form-validation
+```
 Extend this class and start using respect/validation validators as intuitive class methods.
+
 
 #Full example
 Handling a classic contact form is straightforward. Start by creating a new class and extends ValidatableForm. You can then use  `Respect\Validation\Validator` ( v:: ) and define your form fields by transforming them into CamelCase. 
