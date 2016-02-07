@@ -1,4 +1,4 @@
-#PHP Form validation and notifier, class based, intuitive.
+#PHP Form validation, class based, intuitive.
 This package provide a simple wrapper around the awesome respect/validation package. It's basically just an abstract class that you can extend, and it provides a dynamic method `validateInputName()`, along with a mailer and logger feature. 
 
 ##Features
