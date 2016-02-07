@@ -1,22 +1,25 @@
 <?php namespace Idmkr\FormValidation;
 
 use Respect\Validation\Exceptions\NestedValidationException;
-use Idmkr\FormValidation\Traits\Mailable;
-use Idmkr\FormValidation\Traits\Writable;
 
 abstract class ValidatableForm
 {
-    use Mailable,Writable;
 
     private $data;
     private $errors;
-    private $lang = "en";
+    private $lang;
 
-    public function __construct($lang) {
+    /**
+     * @param $lang
+     */
+    public function __construct($lang="en_GB") {
         $this->data = [];
         $this->errors = [];
         $this->lang = $lang;
 
+        // English is the source language
+        // Gettext will be used for other languages
+        // A .mo file with the domain name is needed
         if($lang!="en_GB") {
             $domain = 'respect-validation';
 
@@ -45,19 +48,14 @@ abstract class ValidatableForm
                 }
                 catch(NestedValidationException $e) {
                     $e->setParam('translator', 'gettext');
-                    //if($this->translatedTemplates) {
-                        foreach($e->getMessages() as $msg) {
-                            if($msg) {
-                                if(!isset($this->errors[$key]))
-                                    $this->errors[$key] = '';
+                    foreach($e->getMessages() as $msg) {
+                        if($msg) {
+                            if(!isset($this->errors[$key]))
+                                $this->errors[$key] = '';
 
-                                $this->errors[$key] .= ucfirst($msg).'. ';
-                            }
+                            $this->errors[$key] .= ucfirst($msg).'. ';
                         }
-                    /*}
-                    else
-                        $this->errors[$key] = $e->getFullMessage();*/
-
+                    }
                 }
             }
         }
@@ -65,12 +63,24 @@ abstract class ValidatableForm
         return sizeof($this->errors) == 0;
     }
 
+    /**
+     * @param        $input
+     * @param string $separator
+     *
+     * @return string
+     */
     private function camelize($input, $separator = '_')
     {
         return str_replace($separator, '', ucwords($input, $separator));
     }
 
-    private function decoratedData($html=true) {
+    /**
+     * @param bool $html
+     *
+     * @return string
+     */
+    public function decoratedData($html=true)
+    {
         return ($html?"<pre>":'').json_encode($this->data(),JSON_PRETTY_PRINT).($html?"</pre>":'');
     }
 

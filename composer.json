@@ -8,9 +8,15 @@
       "email": "gael@idmkr.io"
     }
   ],
+  "require":{
+      "php":">=5.3.0",
+      "respect/validation": "^1.0",
+      "egulias/email-validator": "^1.2",
+      "phpmailer/phpmailer": "^5.2"
+  },
   "autoload": {
-    "psr-0": {
-      "Idmkr\\FormValidation": "src"
+    "psr-4": {
+      "Idmkr\\FormValidation\\": "src"
     }
   }
 }

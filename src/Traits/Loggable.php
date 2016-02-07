@@ -1,7 +1,12 @@
 <?php namespace Idmkr\FormValidation\Traits;
 
-trait Writable {
-    public function saveTo($path) {
+trait Loggable {
+    /**
+     * @param $path
+     *
+     * @return $this
+     */
+    public function writeTo($path) {
         if(!is_dir($path))
             mkdir($path);
 

@@ -5,7 +5,7 @@ use PHPMailer;
 trait Mailable {
     private $mailer;
 
-    public function warn($to,$options) {
+    public function notify($to,$options) {
         $options = array_merge([
             "subject" => "FormValidation Mailer: You've got mail !",
             "from" => null,
