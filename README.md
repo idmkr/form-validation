@@ -7,8 +7,9 @@ This package provide a simple wrapper around the awesome respect/validation pack
 - Mail notifier
 
 #Installation
+Download this repository and
 ```
-composer require idmkr/form-validation
+composer install
 ```
 Extend this class and start using respect/validation validators as intuitive class methods.
 
