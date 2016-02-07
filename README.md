@@ -72,7 +72,7 @@ $success = $form->validate($_POST)
                 'from' => $form->data("email")
             ])
             // Log to .json file
-            && $form->writeTo(APP_DIR."/content/form/$type");
+            && $form->writeTo("./form-logs");
 
 if(!$success)
     echo json_encode($form->errors());
