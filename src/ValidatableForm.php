@@ -47,10 +47,10 @@ abstract class ValidatableForm
             $validationMethod = "validate".$this->camelize($key);
 
             if(method_exists($this,$validationMethod)) {
-                // keep this data
-                $this->data[$key] = $value;
                 try {
                     $this->$validationMethod()->setName($key)->assert($value);
+                    // keep this data
+                    $this->data[$key] = $value;
                 }
                 catch(NestedValidationException $e) {
                     $e->setParam('translator', 'gettext');
@@ -96,6 +96,20 @@ abstract class ValidatableForm
     public function data($key=null)
     {
         return $key ? $this->data[$key] : $this->data;
+    }
+
+    /**
+     * @param $excludeKeys
+     *
+     * @return array
+     */
+    public function dataWithout(Array $excludeKeys)
+    {
+        $data = $this->data();
+        foreach($excludeKeys as $key){
+            unset($data[$key]);
+        }
+        return $data;
     }
 
     /**
