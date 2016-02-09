@@ -1,6 +1,7 @@
 <?php namespace Idmkr\FormValidation;
 
 use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Validator;
 
 abstract class ValidatableForm
 {
@@ -47,12 +48,23 @@ abstract class ValidatableForm
     {
         $this->unfilteredData = $data;
 
-        foreach($data as $key=>$value) {
-            $validationMethod = "validate".$this->camelize($key);
+        if(method_exists($this,"setValidation"))
+            $validationMethods = $this->setValidation();
 
-            if(method_exists($this,$validationMethod)) {
+        foreach($data as $key=>$value) {
+            $dynamicValidateMethod = "validate".$this->camelize($key);
+
+            if(method_exists($this,$dynamicValidateMethod))
+                $validate = $this->$dynamicValidateMethod();
+            else if(isset($validationMethods) && isset($validationMethods[$key]))
+                $validate = $validationMethods[$key];
+            else
+                $validate = null;
+
+            if($validate) {
                 try {
-                    $this->$validationMethod()->setName($key)->assert($value);
+                    /** @var Validator $validate */
+                    $validate->setName($key)->assert($value);
                     $this->validData[$key] = $value;
                 }
                 catch(NestedValidationException $e) {
