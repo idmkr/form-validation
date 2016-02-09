@@ -23,10 +23,16 @@ abstract class ValidatableForm
         if($lang!="en_GB") {
             $domain = 'respect-validation';
 
-            setlocale( LC_MESSAGES, $lang.".utf8");
-            bindtextdomain($domain, dirname(__FILE__).'/../lang');
-            textdomain($domain);
-            bind_textdomain_codeset($domain, 'UTF-8');
+            if(function_exists("bindtextdomain")) {
+                setlocale( LC_MESSAGES, $lang.".utf8");
+                bindtextdomain($domain, dirname(__FILE__).'/../lang');
+                textdomain($domain);
+                bind_textdomain_codeset($domain, 'UTF-8');
+            }
+            else {
+                $this->errors["gettext"] =
+                    "Fatal error : gettext not found. You should activate extension=php_gettext.dll in php.ini";
+            }
         }
     }
 
