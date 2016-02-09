@@ -1,13 +1,11 @@
 #PHP Form validation, class based, intuitive.
-This package provide a simple wrapper around the awesome respect/validation package. 
-It's basically just an abstract class that you can extend, and it provides a dynamic method `validateInputName()`,along with a mailer and logger feature. 
+This package provide a very simple wrapper around the awesome respect/validation package. 
+It's just an extendable class for all your needs
 
 ##Features
-- Ok to use (as is) within micro frameworks like Slim or Silex
+- Ok to use (as is) within micro frameworks like Slim or Silex or no framework at all
 - Define your form data and validation with a simple class method
-- [Gettext translations for exception messages](https://github.com/idmkr/respect-validation-localization) 
-- Mail notifier
-- File logger
+- [Gettext translations for exception messages](https://github.com/idmkr/respect-validation-localization)
 
 #Installation
 Use Composer to install this package.
@@ -18,21 +16,17 @@ Extend this class and start using respect/validation validators as intuitive cla
 
 
 #Full example
-Handling a classic contact form is straightforward. Start by creating a new class and extends ValidatableForm. 
-You can then use  `Respect\Validation\Validator` ( v:: ) and define your form fields either with `setValidation` method or by camelizing the form data name. 
+Handling a classic web form is pretty straightforward.
+Start by extending `ValidatableForm` into a new form class. You can then use  `Respect\Validation\Validator` ( v:: ) 
+and define your form fields either with `setValidation` method or by camelizing each form data name. 
 Form data which have not been defined by one of these methods will simply be ignored.
 
 ```php
 use Respect\Validation\Validator as v;
-
 use Idmkr\FormValidation\ValidatableForm;
-use Idmkr\FormValidation\Traits\Mailable;
-use Idmkr\FormValidation\Traits\Loggable;
 
 class ContactForm extends ValidatableForm
 {
-    use Mailable,Loggable;
-    
     // This generic method can wrap all of your form data
     public function setValidation() 
     {
@@ -40,7 +34,7 @@ class ContactForm extends ValidatableForm
             'name' => v::alpha("'\"&,")->length(1,100),
             'telephone' => v::phone(),
             'email' => v::email(),
-            'subject' => v::length(3,300),
+            'subject' => v::length(3,300)
         ];
     }
 
@@ -52,19 +46,12 @@ class ContactForm extends ValidatableForm
 }
 ```
 
-In your POST route/controller function :
+In your POST route/controller function, you would have :
 
 ```php
 $form = new ContactForm('fr_FR');
 
-$success = $form->validate($_POST)
-            // Send email through PHPMailer
-            && $form->notify('your@mail.com',[
-                'subject' => '{Contact Form} '.$form->data("firstname").' '.$form->data("lastname"),
-                'from' => $form->data("email")
-            ])
-            // Log to .json file
-            && $form->writeTo("./form-logs");
+$success = $form->validate($_POST);
 
 if(!$success)
     echo json_encode($form->errors());
