@@ -40,8 +40,8 @@ trait Mailable {
         $mailer = new PHPMailer();
 
         $mailer->addAddress($to);
-        $mailer->Body = $this->decoratedData(true);
-        $mailer->AltBody = $this->decoratedData();
+        $mailer->Body = $this->toPrettyJson(true);
+        $mailer->AltBody = $this->toPrettyJson();
         $mailer->isHTML(true);
 
         return $mailer;

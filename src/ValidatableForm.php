@@ -4,7 +4,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
 
 abstract class ValidatableForm
 {
-    private $data = [];
+    private $validData = [];
     private $unfilteredData = [];
     private $errors = [];
     private $lang = null;
@@ -53,7 +53,7 @@ abstract class ValidatableForm
             if(method_exists($this,$validationMethod)) {
                 try {
                     $this->$validationMethod()->setName($key)->assert($value);
-                    $this->data[$key] = $value;
+                    $this->validData[$key] = $value;
                 }
                 catch(NestedValidationException $e) {
                     $e->setParam('translator', 'gettext');
@@ -90,7 +90,7 @@ abstract class ValidatableForm
      */
     public function toPrettyJson($html=true)
     {
-        return ($html?"<pre>":'').json_encode($this->data(),JSON_PRETTY_PRINT).($html?"</pre>":'');
+        return ($html?"<pre>":'').json_encode($this->validated(),JSON_PRETTY_PRINT).($html?"</pre>":'');
     }
 
     /**
@@ -110,9 +110,9 @@ abstract class ValidatableForm
      *
      * @return array
      */
-    public function data($key=null)
+    public function validated($key=null)
     {
-        return $key ? $this->data[$key] : $this->data;
+        return $key ? $this->validData[$key] : $this->validData;
     }
 
     /**
@@ -120,9 +120,9 @@ abstract class ValidatableForm
      *
      * @return array
      */
-    public function dataWithout(Array $excludeKeys)
+    public function validatedWithout(Array $excludeKeys)
     {
-        $data = $this->data();
+        $data = $this->validated();
         foreach($excludeKeys as $key){
             unset($data[$key]);
         }
