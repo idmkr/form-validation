@@ -5,22 +5,25 @@ use Respect\Validation\Exceptions\NestedValidationException;
 abstract class ValidatableForm
 {
 
-    private $data;
-    private $errors;
-    private $lang;
+    private $data = [];
+    private $unfilteredData = [];
+    private $errors = [];
+    private $lang = null;
 
     /**
      * @param $lang
      */
-    public function __construct($lang="en_GB") {
-        $this->data = [];
-        $this->errors = [];
-        $this->lang = $lang;
+    public function __construct($lang) {
+        $this->setLang($lang);
+    }
 
+    private function setLang($lang="en_GB")
+    {
+        $this->lang = $lang;
         // English is the source language
         // Gettext will be used for other languages
         // A .mo file with the domain name is needed
-        if($lang!="en_GB") {
+        if($this->lang!="en_GB") {
             $domain = 'respect-validation';
 
             if(function_exists("bindtextdomain")) {
@@ -43,13 +46,14 @@ abstract class ValidatableForm
      */
     public function validate($data)
     {
+        $this->unfilteredData = $data;
+
         foreach($data as $key=>$value) {
             $validationMethod = "validate".$this->camelize($key);
 
             if(method_exists($this,$validationMethod)) {
                 try {
                     $this->$validationMethod()->setName($key)->assert($value);
-                    // keep this data
                     $this->data[$key] = $value;
                 }
                 catch(NestedValidationException $e) {
@@ -85,12 +89,26 @@ abstract class ValidatableForm
      *
      * @return string
      */
-    public function decoratedData($html=true)
+    public function toPrettyJson($html=true)
     {
         return ($html?"<pre>":'').json_encode($this->data(),JSON_PRETTY_PRINT).($html?"</pre>":'');
     }
 
     /**
+     * @param string $key
+     *
+     * @return array
+     */
+    public function safe($key=null)
+    {
+        $safeData = filter_var_array($this->unfilteredData, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+
+        return $key ? $safeData[$key] : $safeData;
+    }
+
+    /**
+     * @param string $key
+     *
      * @return array
      */
     public function data($key=null)
