@@ -4,7 +4,6 @@ use Respect\Validation\Exceptions\NestedValidationException;
 
 abstract class ValidatableForm
 {
-
     private $data = [];
     private $unfilteredData = [];
     private $errors = [];
@@ -99,7 +98,7 @@ abstract class ValidatableForm
      *
      * @return array
      */
-    public function safe($key=null)
+    public function sanitized($key=null)
     {
         $safeData = filter_var_array($this->unfilteredData, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
 
