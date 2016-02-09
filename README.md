@@ -57,3 +57,10 @@ if(!$success)
     echo json_encode($form->errors());
 ```
 
+You also need to sanitize the user input. Mostly to display the data after bad validation :
+
+```php
+<form>
+    <input type="text" name="name" value="<?=$form->sanitized('name')?>">
+</form>
+```
